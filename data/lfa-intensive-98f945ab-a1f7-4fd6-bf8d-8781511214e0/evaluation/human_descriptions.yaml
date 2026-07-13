@@ -1,0 +1,21 @@
+# Human-authored reference descriptions for the merged Campinas aerosol columns.
+# Ground truth for the metadata-quality evaluation (§4.5): generated descriptions
+# (column_metadata.csv) are compared against these.
+#
+# Provenance: instrument metadata JSON sidecars' "Variables" field, plus standard
+# aerosol-science meaning where the JSON is positional/implicit. Items marked
+# SSA637 is a derived product not listed verbatim in the JSON).
+
+descriptions:
+  time: "Timestamp of the measurement (UTC, 30-min interval)."
+  conc: "Aerosol particle number concentration (CPC)."
+  BC637: "Black carbon mass concentration (MAAP)."
+  Abs637: "Aerosol absorption coefficient at 637 nm (MAAP)."
+  scat450: "Aerosol scattering coefficient at 450 nm (nephelometer)."
+  scat525: "Aerosol scattering coefficient at 525 nm (nephelometer)."   # (confirm wavelength)
+  scat635: "Aerosol scattering coefficient at 635 nm (nephelometer)."   # (confirm wavelength)
+  Angstrom: "Scattering Ångström exponent."
+  SSA637: "Single scattering albedo at 637 nm."                          # (confirm; derived)
+  total_conc_smps: "Total particle number concentration (SMPS)."
+  total_volume: "Total particle volume (SMPS)."
+  mean_diameter: "Mean particle diameter (SMPS)."

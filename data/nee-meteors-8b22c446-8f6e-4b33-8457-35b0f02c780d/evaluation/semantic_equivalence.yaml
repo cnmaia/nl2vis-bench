@@ -1,0 +1,15 @@
+# Semantic Equivalence Configuration for NEE-METEORS Dataset
+# Defined BEFORE experiments for methodological rigor
+
+definition: |
+  Columns are semantically equivalent when they represent the SAME
+  physical variable with the SAME statistical measure, differing only
+  in processing methodology (e.g., gap-filling technique).
+
+equivalent_pairs:
+  - columns: [NEE_CUT_REF, NEE_VUT_REF]
+    reason: "Both represent Net Ecosystem Exchange (umol CO2 m-2 s-1); CUT uses constant u-star threshold, VUT uses variable threshold for gap-filling"
+
+# NOT equivalent (same variable, different statistics):
+# - t2m_mean vs t2m_median (mean != median)
+# - VPD_magnus_mean vs VPD_magnus_maximum (mean != max)

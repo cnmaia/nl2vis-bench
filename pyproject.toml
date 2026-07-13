@@ -1,0 +1,34 @@
+[project]
+name = "nl2vis-bench"
+version = "0.1.0"
+description = "Natural Language to Visualization for scientific data catalogs"
+requires-python = ">=3.10"
+dependencies = [
+    "typer>=0.9.0",
+    "rich>=13.0.0",
+    "pandas>=2.0.0",
+    "openpyxl>=3.1.0",
+    "matplotlib>=3.7.0",
+    "google-generativeai>=0.3.0",
+    "openai>=1.0.0",
+    "pyyaml>=6.0.0",
+    "sqlalchemy>=1.4.23,<2.0",
+    "psycopg2-binary>=2.9.0",
+    "pydantic-settings>=2.0.0",
+    "minio>=7.2.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0.0", "pytest-cov>=4.0.0"]
+netcdf = ["xarray>=2023.0.0", "netcdf4>=1.6.0"]
+ollama = ["ollama>=0.1.0"]
+
+[project.scripts]
+nl2vis-bench = "nl2vis_bench.cli.app:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["nl2vis_bench*"]

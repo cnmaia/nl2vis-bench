@@ -1,0 +1,549 @@
+# Evaluation Dataset for scientific data catalogs-Vis
+# 50 test questions for NL2Vis evaluation
+# Dataset: NEE-METEORS Amazon (BR-Sa1) - a national research institute
+# DOI: [withheld for double-blind review]
+#
+# Categories:
+# - computed: Derived metrics, cumulative sums, filtered distributions
+# - filtering: Filter by value, date range, condition
+# - grouping: Group by temporal unit (month, year)
+# - temporal: Time series, trends
+# - distribution: Histograms, frequency analysis
+# - correlation: Scatter plots, relationship analysis
+#
+# Expected visualization types:
+# - line: Time series data
+# - histogram: Distribution analysis
+# - scatter: Correlation/relationship analysis
+
+version: "2.0"
+description: "Evaluation dataset for scientific data catalogs-Vis NL2Vis system using a national research institute BR-Sa1 flux tower data"
+dataset: "NEE-METEORS-AMAZON_BRSa1_2002_2011"
+
+questions:
+  # ===== DERIVED/COMPUTED QUERIES (10) =====
+  # Note: Renamed from "aggregation" - these questions produce actual
+  # visualizations rather than scalar values, making them true NL2Vis tasks.
+
+  - id: comp_001
+    question: "Show the distribution of daily temperature range"
+    expected_query_contains: ["t2m_maximum", "t2m_minimum"]
+    expected_columns: ["t2m_maximum", "t2m_minimum"]
+    expected_query: "df.assign(temp_range=df['t2m_maximum'] - df['t2m_minimum'])[['temp_range']]"
+    expected_viz: "histogram"
+    expected_x: "temp_range"
+    expected_y: null
+    category: "computed"
+
+  - id: comp_002
+    question: "Plot the cumulative precipitation over time"
+    expected_query_contains: ["cumsum", "prec"]
+    expected_columns: ["time", "prec"]
+    expected_query: "df[['time']].assign(cumprec=df['prec'].cumsum())"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "cumprec"
+    category: "computed"
+
+  - id: comp_003
+    question: "Show monthly observation counts over the study period"
+    expected_query_contains: ["groupby", "count", "month"]
+    expected_columns: ["time"]
+    expected_query: "df.groupby(df['time'].dt.to_period('M')).size().reset_index(name='count')"
+    expected_viz: "histogram"
+    expected_x: "time"
+    expected_y: "count"
+    category: "computed"
+
+  - id: comp_004
+    question: "Show the soil temperature standard deviation over time"
+    expected_query_contains: ["stl1_std", "time"]
+    expected_columns: ["time", "stl1_std"]
+    expected_query: "df[['time', 'stl1_std']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "stl1_std"
+    category: "computed"
+
+  - id: comp_005
+    question: "Compare daytime and nighttime land surface temperatures"
+    expected_query_contains: ["LST_Day", "LST_Night"]
+    expected_columns: ["LST_Day_1km", "LST_Night_1km"]
+    expected_query: "df[['LST_Day_1km', 'LST_Night_1km']]"
+    expected_viz: "scatter"
+    expected_x: "LST_Day_1km"
+    expected_y: "LST_Night_1km"
+    category: "computed"
+
+  - id: comp_006
+    question: "Show the distribution of NEE measurements greater than 0.5"
+    expected_query_contains: ["NEE", ">", "0.5"]
+    expected_columns: ["NEE_CUT_REF"]
+    expected_query: "df[df['NEE_CUT_REF'] > 0.5]['NEE_CUT_REF']"
+    expected_viz: "histogram"
+    expected_x: "NEE_CUT_REF"
+    expected_y: null
+    category: "computed"
+
+  - id: comp_007
+    question: "Plot the monthly average of vapor pressure deficit"
+    expected_query_contains: ["groupby", "month", "VPD"]
+    expected_columns: ["VPD_magnus_mean"]
+    expected_query: "df.groupby(df['time'].dt.month)['VPD_magnus_mean'].mean().reset_index()"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "VPD_magnus_mean"
+    category: "computed"
+
+  - id: comp_008
+    question: "Show the distribution of Leaf Area Index values"
+    expected_query_contains: ["Lai"]
+    expected_columns: ["Lai"]
+    expected_query: "df['Lai']"
+    expected_viz: "histogram"
+    expected_x: "Lai"
+    expected_y: null
+    category: "computed"
+
+  - id: comp_009
+    question: "Plot the relationship between EVI and LAI"
+    expected_query_contains: ["EVI", "Lai"]
+    expected_columns: ["EVI", "Lai"]
+    expected_query: "df[['EVI', 'Lai']]"
+    expected_viz: "scatter"
+    expected_x: "EVI"
+    expected_y: "Lai"
+    category: "computed"
+
+  - id: comp_010
+    question: "Show the distribution of FPAR values"
+    expected_query_contains: ["Fpar"]
+    expected_columns: ["Fpar"]
+    expected_query: "df['Fpar']"
+    expected_viz: "histogram"
+    expected_x: "Fpar"
+    expected_y: null
+    category: "computed"
+
+  # ===== TEMPORAL QUERIES (10) =====
+  - id: temp_001
+    question: "Show the Net Ecosystem Exchange over time"
+    expected_query_contains: ["time", "NEE"]
+    expected_columns: ["time", "NEE_CUT_REF"]
+    expected_query: "df[['time', 'NEE_CUT_REF']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "NEE_CUT_REF"
+    category: "temporal"
+
+  - id: temp_002
+    question: "Plot the air temperature trend throughout the measurement period"
+    expected_query_contains: ["time", "t2m"]
+    expected_columns: ["time", "t2m_mean"]
+    expected_query: "df[['time', 't2m_mean']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "t2m_mean"
+    category: "temporal"
+
+  - id: temp_003
+    question: "Show how precipitation evolved over the years"
+    expected_query_contains: ["time", "prec"]
+    expected_columns: ["time", "prec"]
+    expected_query: "df[['time', 'prec']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "prec"
+    category: "temporal"
+
+  - id: temp_004
+    question: "Display the vapor pressure deficit time series"
+    expected_query_contains: ["time", "VPD"]
+    expected_columns: ["time", "VPD_magnus_mean"]
+    expected_query: "df[['time', 'VPD_magnus_mean']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "VPD_magnus_mean"
+    category: "temporal"
+
+  - id: temp_005
+    question: "What is the NDVI pattern over the measurement period?"
+    expected_query_contains: ["time", "NDVI"]
+    expected_columns: ["time", "NDVI"]
+    expected_query: "df[['time', 'NDVI']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "NDVI"
+    category: "temporal"
+
+  - id: temp_006
+    question: "Show the soil temperature variation over time"
+    expected_query_contains: ["time", "stl1"]
+    expected_columns: ["time", "stl1_mean"]
+    expected_query: "df[['time', 'stl1_mean']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "stl1_mean"
+    category: "temporal"
+
+  - id: temp_007
+    question: "Plot the shortwave radiation over time"
+    expected_query_contains: ["time", "sw"]
+    expected_columns: ["time", "adj_sfc_sw_diff_all_daily"]
+    expected_query: "df[['time', 'adj_sfc_sw_diff_all_daily']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "adj_sfc_sw_diff_all_daily"
+    category: "temporal"
+
+  - id: temp_008
+    question: "Display the temporal evolution of PAR"
+    expected_query_contains: ["time", "par"]
+    expected_columns: ["time", "adj_sfc_par_diff_all_daily"]
+    expected_query: "df[['time', 'adj_sfc_par_diff_all_daily']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "adj_sfc_par_diff_all_daily"
+    category: "temporal"
+
+  - id: temp_009
+    question: "Show how the Enhanced Vegetation Index changed over time"
+    expected_query_contains: ["time", "EVI"]
+    expected_columns: ["time", "EVI"]
+    expected_query: "df[['time', 'EVI']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "EVI"
+    category: "temporal"
+
+  - id: temp_010
+    question: "What is the trend of dew point temperature over the years?"
+    expected_query_contains: ["time", "d2m"]
+    expected_columns: ["time", "d2m_mean"]
+    expected_query: "df[['time', 'd2m_mean']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "d2m_mean"
+    category: "temporal"
+
+  # ===== DISTRIBUTION QUERIES (10) =====
+  - id: dist_001
+    question: "Show the distribution of NEE values"
+    expected_query_contains: ["NEE"]
+    expected_columns: ["NEE_CUT_REF"]
+    expected_query: "df['NEE_CUT_REF']"
+    expected_viz: "histogram"
+    expected_x: "NEE_CUT_REF"
+    expected_y: null
+    category: "distribution"
+
+  - id: dist_002
+    question: "What is the frequency distribution of air temperature?"
+    expected_query_contains: ["t2m"]
+    expected_columns: ["t2m_mean"]
+    expected_query: "df['t2m_mean']"
+    expected_viz: "histogram"
+    expected_x: "t2m_mean"
+    expected_y: null
+    category: "distribution"
+
+  - id: dist_003
+    question: "Create a histogram of vapor pressure deficit"
+    expected_query_contains: ["VPD"]
+    expected_columns: ["VPD_magnus_mean"]
+    expected_query: "df['VPD_magnus_mean']"
+    expected_viz: "histogram"
+    expected_x: "VPD_magnus_mean"
+    expected_y: null
+    category: "distribution"
+
+  - id: dist_004
+    question: "Show how precipitation is distributed"
+    expected_query_contains: ["prec"]
+    expected_columns: ["prec"]
+    expected_query: "df['prec']"
+    expected_viz: "histogram"
+    expected_x: "prec"
+    expected_y: null
+    category: "distribution"
+
+  - id: dist_005
+    question: "What is the distribution of soil temperature?"
+    expected_query_contains: ["stl1"]
+    expected_columns: ["stl1_mean"]
+    expected_query: "df['stl1_mean']"
+    expected_viz: "histogram"
+    expected_x: "stl1_mean"
+    expected_y: null
+    category: "distribution"
+
+  - id: dist_006
+    question: "Display the frequency of different NDVI values"
+    expected_query_contains: ["NDVI"]
+    expected_columns: ["NDVI"]
+    expected_query: "df['NDVI']"
+    expected_viz: "histogram"
+    expected_x: "NDVI"
+    expected_y: null
+    category: "distribution"
+
+  - id: dist_007
+    question: "Show a histogram of PAR values"
+    expected_query_contains: ["par"]
+    expected_columns: ["adj_sfc_par_diff_all_daily"]
+    expected_query: "df['adj_sfc_par_diff_all_daily']"
+    expected_viz: "histogram"
+    expected_x: "adj_sfc_par_diff_all_daily"
+    expected_y: null
+    category: "distribution"
+
+  - id: dist_008
+    question: "What is the distribution of daily runoff?"
+    expected_query_contains: ["ro"]
+    expected_columns: ["ro_mean"]
+    expected_query: "df['ro_mean']"
+    expected_viz: "histogram"
+    expected_x: "ro_mean"
+    expected_y: null
+    category: "distribution"
+
+  - id: dist_009
+    question: "Show the frequency distribution of dew point"
+    expected_query_contains: ["d2m"]
+    expected_columns: ["d2m_mean"]
+    expected_query: "df['d2m_mean']"
+    expected_viz: "histogram"
+    expected_x: "d2m_mean"
+    expected_y: null
+    category: "distribution"
+
+  - id: dist_010
+    question: "Create a distribution plot of shortwave radiation"
+    expected_query_contains: ["sw"]
+    expected_columns: ["adj_sfc_sw_diff_all_daily"]
+    expected_query: "df['adj_sfc_sw_diff_all_daily']"
+    expected_viz: "histogram"
+    expected_x: "adj_sfc_sw_diff_all_daily"
+    expected_y: null
+    category: "distribution"
+
+  # ===== CORRELATION QUERIES (10) =====
+  - id: corr_001
+    question: "Show the relationship between NEE and air temperature"
+    expected_query_contains: ["NEE", "t2m"]
+    expected_columns: ["NEE_CUT_REF", "t2m_mean"]
+    expected_query: "df[['NEE_CUT_REF', 't2m_mean']]"
+    expected_viz: "scatter"
+    expected_x: "NEE_CUT_REF"
+    expected_y: "t2m_mean"
+    category: "correlation"
+
+  - id: corr_002
+    question: "Is there a correlation between vapor pressure deficit and NEE?"
+    expected_query_contains: ["VPD", "NEE"]
+    expected_columns: ["VPD_magnus_mean", "NEE_CUT_REF"]
+    expected_query: "df[['VPD_magnus_mean', 'NEE_CUT_REF']]"
+    expected_viz: "scatter"
+    expected_x: "VPD_magnus_mean"
+    expected_y: "NEE_CUT_REF"
+    category: "correlation"
+
+  - id: corr_003
+    question: "Plot NEE versus precipitation"
+    expected_query_contains: ["NEE", "prec"]
+    expected_columns: ["NEE_CUT_REF", "prec"]
+    expected_query: "df[['NEE_CUT_REF', 'prec']]"
+    expected_viz: "scatter"
+    expected_x: "NEE_CUT_REF"
+    expected_y: "prec"
+    category: "correlation"
+
+  - id: corr_004
+    question: "Show a scatter plot of PAR vs NEE"
+    expected_query_contains: ["par", "NEE"]
+    expected_columns: ["adj_sfc_par_diff_all_daily", "NEE_CUT_REF"]
+    expected_query: "df[['adj_sfc_par_diff_all_daily', 'NEE_CUT_REF']]"
+    expected_viz: "scatter"
+    expected_x: "adj_sfc_par_diff_all_daily"
+    expected_y: "NEE_CUT_REF"
+    category: "correlation"
+
+  - id: corr_005
+    question: "What is the relationship between temperature and VPD?"
+    expected_query_contains: ["t2m", "VPD"]
+    expected_columns: ["t2m_mean", "VPD_magnus_mean"]
+    expected_query: "df[['t2m_mean', 'VPD_magnus_mean']]"
+    expected_viz: "scatter"
+    expected_x: "t2m_mean"
+    expected_y: "VPD_magnus_mean"
+    category: "correlation"
+
+  - id: corr_006
+    question: "Compare soil temperature against air temperature"
+    expected_query_contains: ["stl1", "t2m"]
+    expected_columns: ["stl1_mean", "t2m_mean"]
+    expected_query: "df[['stl1_mean', 't2m_mean']]"
+    expected_viz: "scatter"
+    expected_x: "stl1_mean"
+    expected_y: "t2m_mean"
+    category: "correlation"
+
+  - id: corr_007
+    question: "Show NDVI versus precipitation relationship"
+    expected_query_contains: ["NDVI", "prec"]
+    expected_columns: ["NDVI", "prec"]
+    expected_query: "df[['NDVI', 'prec']]"
+    expected_viz: "scatter"
+    expected_x: "NDVI"
+    expected_y: "prec"
+    category: "correlation"
+
+  - id: corr_008
+    question: "Plot shortwave radiation against temperature"
+    expected_query_contains: ["sw", "t2m"]
+    expected_columns: ["adj_sfc_sw_diff_all_daily", "t2m_mean"]
+    expected_query: "df[['adj_sfc_sw_diff_all_daily', 't2m_mean']]"
+    expected_viz: "scatter"
+    expected_x: "adj_sfc_sw_diff_all_daily"
+    expected_y: "t2m_mean"
+    category: "correlation"
+
+  - id: corr_009
+    question: "Is there a relationship between EVI and NEE?"
+    expected_query_contains: ["EVI", "NEE"]
+    expected_columns: ["EVI", "NEE_CUT_REF"]
+    expected_query: "df[['EVI', 'NEE_CUT_REF']]"
+    expected_viz: "scatter"
+    expected_x: "EVI"
+    expected_y: "NEE_CUT_REF"
+    category: "correlation"
+
+  - id: corr_010
+    question: "Show correlation between dew point and air temperature"
+    expected_query_contains: ["d2m", "t2m"]
+    expected_columns: ["d2m_mean", "t2m_mean"]
+    expected_query: "df[['d2m_mean', 't2m_mean']]"
+    expected_viz: "scatter"
+    expected_x: "d2m_mean"
+    expected_y: "t2m_mean"
+    category: "correlation"
+
+  # ===== GROUPING QUERIES (5) =====
+  - id: grp_001
+    question: "What is the average NEE by month?"
+    expected_query_contains: ["groupby", "month", "mean", "NEE"]
+    expected_columns: ["NEE_CUT_REF"]
+    expected_query: "df.groupby(df['time'].dt.month)['NEE_CUT_REF'].mean().reset_index()"
+    expected_viz: "histogram"
+    expected_x: "time"
+    expected_y: "NEE_CUT_REF"
+    category: "grouping"
+
+  - id: grp_002
+    question: "Show the total precipitation by year"
+    expected_query_contains: ["groupby", "year", "sum", "prec"]
+    expected_columns: ["prec"]
+    expected_query: "df.groupby(df['time'].dt.year)['prec'].sum().reset_index()"
+    expected_viz: "histogram"
+    expected_x: "time"
+    expected_y: "prec"
+    category: "grouping"
+
+  - id: grp_003
+    question: "Calculate average temperature per month"
+    expected_query_contains: ["groupby", "month", "mean", "t2m"]
+    expected_columns: ["t2m_mean"]
+    expected_query: "df.groupby(df['time'].dt.month)['t2m_mean'].mean().reset_index()"
+    expected_viz: "histogram"
+    expected_x: "time"
+    expected_y: "t2m_mean"
+    category: "grouping"
+
+  - id: grp_004
+    question: "What is the max VPD by year?"
+    expected_query_contains: ["groupby", "year", "max", "VPD"]
+    expected_columns: ["VPD_magnus_maximum"]
+    expected_query: "df.groupby(df['time'].dt.year)['VPD_magnus_maximum'].max().reset_index()"
+    expected_viz: "histogram"
+    expected_x: "time"
+    expected_y: "VPD_magnus_maximum"
+    category: "grouping"
+
+  - id: grp_005
+    question: "Show average NDVI by month of year"
+    expected_query_contains: ["groupby", "month", "mean", "NDVI"]
+    expected_columns: ["NDVI"]
+    expected_query: "df.groupby(df['time'].dt.month)['NDVI'].mean().reset_index()"
+    expected_viz: "histogram"
+    expected_x: "time"
+    expected_y: "NDVI"
+    category: "grouping"
+
+  # ===== FILTERING QUERIES (5) =====
+  - id: flt_001
+    question: "Show all records where NEE is positive (carbon source)"
+    expected_query_contains: ["NEE", ">", "0"]
+    expected_columns: ["NEE_CUT_REF"]
+    expected_query: "df[df['NEE_CUT_REF'] > 0][['time', 'NEE_CUT_REF']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "NEE_CUT_REF"
+    category: "filtering"
+
+  - id: flt_002
+    question: "Filter data for days with precipitation above 50mm"
+    expected_query_contains: ["prec", ">", "50"]
+    expected_columns: ["prec"]
+    expected_query: "df[df['prec'] > 50][['time', 'prec']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "prec"
+    category: "filtering"
+
+  - id: flt_003
+    question: "Show data from 2005"
+    expected_query_contains: ["time", "2005"]
+    expected_columns: ["time"]
+    expected_query: "df[df['time'].dt.year == 2005][['time', 'NEE_CUT_REF']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "NEE_CUT_REF"
+    category: "filtering"
+
+  - id: flt_004
+    question: "Get observations where VPD exceeds 15 hPa"
+    expected_query_contains: ["VPD", ">", "15"]
+    expected_columns: ["VPD_magnus_mean"]
+    expected_query: "df[df['VPD_magnus_mean'] > 15][['time', 'VPD_magnus_mean']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "VPD_magnus_mean"
+    category: "filtering"
+
+  - id: flt_005
+    question: "Show NEE data where the quality flag (NEE_CUT_REF_QC) is greater than 0.8"
+    expected_query_contains: ["QC", ">", "0.8"]
+    expected_columns: ["NEE_CUT_REF_QC"]
+    expected_query: "df[df['NEE_CUT_REF_QC'] > 0.8][['time', 'NEE_CUT_REF']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "NEE_CUT_REF"
+    category: "filtering"
+
+# Evaluation metrics
+metrics:
+  - name: "translation_accuracy"
+    description: "Percentage of queries that contain expected keywords"
+    weight: 0.4
+
+  - name: "column_accuracy"
+    description: "Percentage of correct columns identified"
+    weight: 0.3
+
+  - name: "viz_accuracy"
+    description: "Percentage of correct visualization types selected"
+    weight: 0.2
+
+  - name: "execution_success"
+    description: "Percentage of queries that execute without errors"
+    weight: 0.1

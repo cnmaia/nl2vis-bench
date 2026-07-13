@@ -1,0 +1,20 @@
+# Human-authored reference descriptions for the PMG subsurface-gas columns.
+# Ground truth for the metadata-quality evaluation (§4.5). Source: standard
+
+descriptions:
+  building: "Building/structure identifier (categorical)."
+  well: "Monitoring well identifier, e.g. PMG-16 (categorical)."
+  depth_level: "Sampling depth level within the well, e.g. A/B (categorical)."
+  time: "Date of the measurement."
+  ch4: "Methane concentration."
+  ch4_peak: "Peak methane concentration during the measurement."
+  co2: "Carbon dioxide concentration."
+  o2: "Oxygen concentration."
+  h2s: "Hydrogen sulfide concentration."
+  co: "Carbon monoxide concentration."
+  bal: "Balance gas: the remaining gas fraction not accounted for by the measured species."  #
+  well pressure: "Pressure measured within the well."
+  voc: "Volatile organic compound concentration."
+  lel: "Lower explosive limit (fraction of the lower flammability threshold)."
+  field_notes: "Field notes recorded during sampling (free text)."
+  comments: "General comments / remarks (free text)."

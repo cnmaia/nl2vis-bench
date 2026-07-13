@@ -1,0 +1,482 @@
+# Evaluation Dataset for scientific data catalogs-Vis -- PMG Subsurface Gas
+# Dataset: Subsurface Gas Intrusion Monitoring at an urban university campus (PMG)
+# Source: an anonymized data repository -- DOI: [withheld for double-blind review]
+# Data file: pmg_sample.csv  (produced by prepare_pmg.py; `date` renamed to `time`)
+# Domain: groundwater / urban subsurface gas monitoring
+#
+# Columns: building, well, depth_level (categorical); time (datetime);
+#   ch4 (methane), ch4_peak (methane peak), co2 (carbon dioxide), o2 (oxygen),
+#   h2s (hydrogen sulfide), co (carbon monoxide), bal (balance gas),
+#   well pressure, voc (volatile organic compounds), lel (lower explosive limit);
+#   field_notes, comments (free text, not queried).
+#
+#   methane->ch4, carbon dioxide->co2, oxygen->o2, hydrogen sulfide->h2s,
+#   carbon monoxide->co (NOT co2), volatile organic compounds->voc,
+#   lower explosive limit->lel, balance gas->bal, methane peak->ch4_peak.
+
+version: "1.0"
+description: "50 evaluation questions for the PMG subsurface gas dataset (an urban university campus)"
+dataset: "PMG-SUBSURFACE-GAS-the campus-a university"
+
+questions:
+  # ===== COMPUTED (10) =====
+  - id: comp_001
+    question: "Show the distribution of the methane to carbon dioxide ratio"
+    expected_query_contains: ["ch4", "co2"]
+    expected_columns: ["ch4", "co2"]
+    expected_query: "df.assign(ch4_co2_ratio=df['ch4'] / df['co2'])[['ch4_co2_ratio']]"
+    expected_viz: "histogram"
+    expected_x: "ch4_co2_ratio"
+    expected_y: null
+    category: "computed"
+  - id: comp_002
+    question: "Plot the cumulative methane readings over time"
+    expected_query_contains: ["cumsum", "ch4"]
+    expected_columns: ["time", "ch4"]
+    expected_query: "df[['time']].assign(cum_ch4=df['ch4'].cumsum())"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "cum_ch4"
+    category: "computed"
+  - id: comp_003
+    question: "Plot the difference between the methane peak and the methane reading over time"
+    expected_query_contains: ["ch4_peak", "ch4"]
+    expected_columns: ["time", "ch4_peak", "ch4"]
+    expected_query: "df[['time']].assign(ch4_diff=df['ch4_peak'] - df['ch4'])"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "ch4_diff"
+    category: "computed"
+  - id: comp_004
+    question: "Show the ratio of carbon dioxide to oxygen over time"
+    expected_query_contains: ["co2", "o2"]
+    expected_columns: ["time", "co2", "o2"]
+    expected_query: "df[['time']].assign(co2_o2_ratio=df['co2'] / df['o2'])"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "co2_o2_ratio"
+    category: "computed"
+  - id: comp_005
+    question: "Show the distribution of the methane peak to methane ratio"
+    expected_query_contains: ["ch4_peak", "ch4"]
+    expected_columns: ["ch4_peak", "ch4"]
+    expected_query: "df.assign(peak_ratio=df['ch4_peak'] / df['ch4'])[['peak_ratio']]"
+    expected_viz: "histogram"
+    expected_x: "peak_ratio"
+    expected_y: null
+    category: "computed"
+  - id: comp_006
+    question: "Plot the cumulative carbon dioxide readings over time"
+    expected_query_contains: ["cumsum", "co2"]
+    expected_columns: ["time", "co2"]
+    expected_query: "df[['time']].assign(cum_co2=df['co2'].cumsum())"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "cum_co2"
+    category: "computed"
+  - id: comp_007
+    question: "Show the distribution of the ratio of volatile organic compounds to methane"
+    expected_query_contains: ["voc", "ch4"]
+    expected_columns: ["voc", "ch4"]
+    expected_query: "df.assign(voc_ch4_ratio=df['voc'] / df['ch4'])[['voc_ch4_ratio']]"
+    expected_viz: "histogram"
+    expected_x: "voc_ch4_ratio"
+    expected_y: null
+    category: "computed"
+  - id: comp_008
+    question: "Show the difference between carbon dioxide and oxygen over time"
+    expected_query_contains: ["co2", "o2"]
+    expected_columns: ["time", "co2", "o2"]
+    expected_query: "df[['time']].assign(co2_o2_diff=df['co2'] - df['o2'])"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "co2_o2_diff"
+    category: "computed"
+  - id: comp_009
+    question: "Show the distribution of hydrogen sulfide relative to methane"
+    expected_query_contains: ["h2s", "ch4"]
+    expected_columns: ["h2s", "ch4"]
+    expected_query: "df.assign(h2s_ch4_ratio=df['h2s'] / df['ch4'])[['h2s_ch4_ratio']]"
+    expected_viz: "histogram"
+    expected_x: "h2s_ch4_ratio"
+    expected_y: null
+    category: "computed"
+  - id: comp_010
+    question: "Show weekly measurement counts over the study period"
+    expected_query_contains: ["groupby", "count"]
+    expected_columns: ["time"]
+    expected_query: "df.groupby(df['time'].dt.to_period('W')).size().reset_index(name='count')"
+    expected_viz: "histogram"
+    expected_x: "time"
+    expected_y: "count"
+    category: "computed"
+
+  # ===== TEMPORAL (10) =====
+  - id: temp_001
+    question: "Show carbon dioxide levels over time"
+    expected_query_contains: ["time", "co2"]
+    expected_columns: ["time", "co2"]
+    expected_query: "df[['time', 'co2']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "co2"
+    category: "temporal"
+  - id: temp_002
+    question: "How does methane concentration change over time?"
+    expected_query_contains: ["time", "ch4"]
+    expected_columns: ["time", "ch4"]
+    expected_query: "df[['time', 'ch4']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "ch4"
+    category: "temporal"
+  - id: temp_003
+    question: "Show the trend of hydrogen sulfide across the measurement period"
+    expected_query_contains: ["time", "h2s"]
+    expected_columns: ["time", "h2s"]
+    expected_query: "df[['time', 'h2s']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "h2s"
+    category: "temporal"
+  - id: temp_004
+    question: "Plot well pressure over time"
+    expected_query_contains: ["time", "well pressure"]
+    expected_columns: ["time", "well pressure"]
+    expected_query: "df[['time', 'well pressure']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "well pressure"
+    category: "temporal"
+  - id: temp_005
+    question: "Show oxygen levels over time"
+    expected_query_contains: ["time", "o2"]
+    expected_columns: ["time", "o2"]
+    expected_query: "df[['time', 'o2']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "o2"
+    category: "temporal"
+  - id: temp_006
+    question: "Plot carbon monoxide over time"
+    expected_query_contains: ["time", "co"]
+    expected_columns: ["time", "co"]
+    expected_query: "df[['time', 'co']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "co"
+    category: "temporal"
+  - id: temp_007
+    question: "Show how volatile organic compounds vary over time"
+    expected_query_contains: ["time", "voc"]
+    expected_columns: ["time", "voc"]
+    expected_query: "df[['time', 'voc']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "voc"
+    category: "temporal"
+  - id: temp_008
+    question: "Display the lower explosive limit over the measurement period"
+    expected_query_contains: ["time", "lel"]
+    expected_columns: ["time", "lel"]
+    expected_query: "df[['time', 'lel']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "lel"
+    category: "temporal"
+  - id: temp_009
+    question: "Show the balance gas over time"
+    expected_query_contains: ["time", "bal"]
+    expected_columns: ["time", "bal"]
+    expected_query: "df[['time', 'bal']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "bal"
+    category: "temporal"
+  - id: temp_010
+    question: "Plot the methane peak readings over time"
+    expected_query_contains: ["time", "ch4_peak"]
+    expected_columns: ["time", "ch4_peak"]
+    expected_query: "df[['time', 'ch4_peak']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "ch4_peak"
+    category: "temporal"
+
+  # ===== DISTRIBUTION (10) =====
+  - id: dist_001
+    question: "Show the distribution of oxygen readings"
+    expected_query_contains: ["o2"]
+    expected_columns: ["o2"]
+    expected_query: "df[['o2']]"
+    expected_viz: "histogram"
+    expected_x: "o2"
+    expected_y: null
+    category: "distribution"
+  - id: dist_002
+    question: "What is the distribution of carbon monoxide measurements?"
+    expected_query_contains: ["co"]
+    expected_columns: ["co"]
+    expected_query: "df[['co']]"
+    expected_viz: "histogram"
+    expected_x: "co"
+    expected_y: null
+    category: "distribution"
+  - id: dist_003
+    question: "Show the frequency distribution of volatile organic compound levels"
+    expected_query_contains: ["voc"]
+    expected_columns: ["voc"]
+    expected_query: "df[['voc']]"
+    expected_viz: "histogram"
+    expected_x: "voc"
+    expected_y: null
+    category: "distribution"
+  - id: dist_004
+    question: "Create a histogram of carbon dioxide measurements"
+    expected_query_contains: ["co2"]
+    expected_columns: ["co2"]
+    expected_query: "df[['co2']]"
+    expected_viz: "histogram"
+    expected_x: "co2"
+    expected_y: null
+    category: "distribution"
+  - id: dist_005
+    question: "Show how methane readings are distributed"
+    expected_query_contains: ["ch4"]
+    expected_columns: ["ch4"]
+    expected_query: "df[['ch4']]"
+    expected_viz: "histogram"
+    expected_x: "ch4"
+    expected_y: null
+    category: "distribution"
+  - id: dist_006
+    question: "What is the distribution of hydrogen sulfide?"
+    expected_query_contains: ["h2s"]
+    expected_columns: ["h2s"]
+    expected_query: "df[['h2s']]"
+    expected_viz: "histogram"
+    expected_x: "h2s"
+    expected_y: null
+    category: "distribution"
+  - id: dist_007
+    question: "Show the distribution of the lower explosive limit"
+    expected_query_contains: ["lel"]
+    expected_columns: ["lel"]
+    expected_query: "df[['lel']]"
+    expected_viz: "histogram"
+    expected_x: "lel"
+    expected_y: null
+    category: "distribution"
+  - id: dist_008
+    question: "Create a histogram of the balance gas values"
+    expected_query_contains: ["bal"]
+    expected_columns: ["bal"]
+    expected_query: "df[['bal']]"
+    expected_viz: "histogram"
+    expected_x: "bal"
+    expected_y: null
+    category: "distribution"
+  - id: dist_009
+    question: "Show the frequency distribution of well pressure"
+    expected_query_contains: ["well pressure"]
+    expected_columns: ["well pressure"]
+    expected_query: "df[['well pressure']]"
+    expected_viz: "histogram"
+    expected_x: "well pressure"
+    expected_y: null
+    category: "distribution"
+  - id: dist_010
+    question: "What is the distribution of the methane peak values?"
+    expected_query_contains: ["ch4_peak"]
+    expected_columns: ["ch4_peak"]
+    expected_query: "df[['ch4_peak']]"
+    expected_viz: "histogram"
+    expected_x: "ch4_peak"
+    expected_y: null
+    category: "distribution"
+
+  # ===== CORRELATION (10) =====
+  - id: corr_001
+    question: "Is there a relationship between methane and carbon dioxide?"
+    expected_query_contains: ["ch4", "co2"]
+    expected_columns: ["ch4", "co2"]
+    expected_query: "df[['ch4', 'co2']]"
+    expected_viz: "scatter"
+    expected_x: "ch4"
+    expected_y: "co2"
+    category: "correlation"
+  - id: corr_002
+    question: "Plot oxygen against carbon dioxide"
+    expected_query_contains: ["o2", "co2"]
+    expected_columns: ["o2", "co2"]
+    expected_query: "df[['o2', 'co2']]"
+    expected_viz: "scatter"
+    expected_x: "o2"
+    expected_y: "co2"
+    category: "correlation"
+  - id: corr_003
+    question: "Show the relationship between methane and the lower explosive limit"
+    expected_query_contains: ["ch4", "lel"]
+    expected_columns: ["ch4", "lel"]
+    expected_query: "df[['ch4', 'lel']]"
+    expected_viz: "scatter"
+    expected_x: "ch4"
+    expected_y: "lel"
+    category: "correlation"
+  - id: corr_004
+    question: "Is there a correlation between carbon dioxide and hydrogen sulfide?"
+    expected_query_contains: ["co2", "h2s"]
+    expected_columns: ["co2", "h2s"]
+    expected_query: "df[['co2', 'h2s']]"
+    expected_viz: "scatter"
+    expected_x: "co2"
+    expected_y: "h2s"
+    category: "correlation"
+  - id: corr_005
+    question: "Plot the methane reading against the methane peak"
+    expected_query_contains: ["ch4", "ch4_peak"]
+    expected_columns: ["ch4", "ch4_peak"]
+    expected_query: "df[['ch4', 'ch4_peak']]"
+    expected_viz: "scatter"
+    expected_x: "ch4"
+    expected_y: "ch4_peak"
+    category: "correlation"
+  - id: corr_006
+    question: "Show the relationship between oxygen and methane"
+    expected_query_contains: ["o2", "ch4"]
+    expected_columns: ["o2", "ch4"]
+    expected_query: "df[['o2', 'ch4']]"
+    expected_viz: "scatter"
+    expected_x: "o2"
+    expected_y: "ch4"
+    category: "correlation"
+  - id: corr_007
+    question: "Is there a relationship between carbon monoxide and carbon dioxide?"
+    expected_query_contains: ["co", "co2"]
+    expected_columns: ["co", "co2"]
+    expected_query: "df[['co', 'co2']]"
+    expected_viz: "scatter"
+    expected_x: "co"
+    expected_y: "co2"
+    category: "correlation"
+  - id: corr_008
+    question: "Plot volatile organic compounds against methane"
+    expected_query_contains: ["voc", "ch4"]
+    expected_columns: ["voc", "ch4"]
+    expected_query: "df[['voc', 'ch4']]"
+    expected_viz: "scatter"
+    expected_x: "voc"
+    expected_y: "ch4"
+    category: "correlation"
+  - id: corr_009
+    question: "Show the relationship between hydrogen sulfide and the lower explosive limit"
+    expected_query_contains: ["h2s", "lel"]
+    expected_columns: ["h2s", "lel"]
+    expected_query: "df[['h2s', 'lel']]"
+    expected_viz: "scatter"
+    expected_x: "h2s"
+    expected_y: "lel"
+    category: "correlation"
+  - id: corr_010
+    question: "Plot the balance gas against oxygen"
+    expected_query_contains: ["bal", "o2"]
+    expected_columns: ["bal", "o2"]
+    expected_query: "df[['bal', 'o2']]"
+    expected_viz: "scatter"
+    expected_x: "bal"
+    expected_y: "o2"
+    category: "correlation"
+
+  # ===== GROUPING (5) =====
+  - id: grp_001
+    question: "Show average methane concentration by building"
+    expected_query_contains: ["groupby", "building", "ch4"]
+    expected_columns: ["building", "ch4"]
+    expected_query: "df.groupby('building')['ch4'].mean().reset_index()"
+    expected_viz: "histogram"
+    expected_x: "building"
+    expected_y: "ch4"
+    category: "grouping"
+  - id: grp_002
+    question: "Compare average carbon dioxide levels across depth levels"
+    expected_query_contains: ["groupby", "depth_level", "co2"]
+    expected_columns: ["depth_level", "co2"]
+    expected_query: "df.groupby('depth_level')['co2'].mean().reset_index()"
+    expected_viz: "histogram"
+    expected_x: "depth_level"
+    expected_y: "co2"
+    category: "grouping"
+  - id: grp_003
+    question: "Show the number of measurements per well"
+    expected_query_contains: ["groupby", "well"]
+    expected_columns: ["well"]
+    expected_query: "df.groupby('well').size().reset_index(name='count')"
+    expected_viz: "histogram"
+    expected_x: "well"
+    expected_y: "count"
+    category: "grouping"
+  - id: grp_004
+    question: "Show average oxygen by building"
+    expected_query_contains: ["groupby", "building", "o2"]
+    expected_columns: ["building", "o2"]
+    expected_query: "df.groupby('building')['o2'].mean().reset_index()"
+    expected_viz: "histogram"
+    expected_x: "building"
+    expected_y: "o2"
+    category: "grouping"
+  - id: grp_005
+    question: "What is the maximum methane concentration per well?"
+    expected_query_contains: ["groupby", "well", "ch4"]
+    expected_columns: ["well", "ch4"]
+    expected_query: "df.groupby('well')['ch4'].max().reset_index()"
+    expected_viz: "histogram"
+    expected_x: "well"
+    expected_y: "ch4"
+    category: "grouping"
+
+  # ===== FILTERING (5) =====
+  - id: flt_001
+    question: "Show methane readings where the lower explosive limit is above zero"
+    expected_query_contains: ["lel", "ch4"]
+    expected_columns: ["time", "ch4", "lel"]
+    expected_query: "df[df['lel'] > 0][['time', 'ch4']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "ch4"
+    category: "filtering"
+  - id: flt_002
+    question: "Show carbon dioxide readings for well PMG-16"
+    expected_query_contains: ["well", "PMG-16", "co2"]
+    expected_columns: ["time", "well", "co2"]
+    expected_query: "df[df['well'] == 'PMG-16'][['time', 'co2']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "co2"
+    category: "filtering"
+  - id: flt_003
+    question: "Show measurements with detectable hydrogen sulfide"
+    expected_query_contains: ["h2s"]
+    expected_columns: ["time", "h2s"]
+    expected_query: "df[df['h2s'] > 0][['time', 'h2s']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "h2s"
+    category: "filtering"
+  - id: flt_004
+    question: "Show methane readings at depth level A"
+    expected_query_contains: ["depth_level", "ch4"]
+    expected_columns: ["time", "depth_level", "ch4"]
+    expected_query: "df[df['depth_level'] == 'A'][['time', 'ch4']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "ch4"
+    category: "filtering"
+  - id: flt_005
+    question: "Show carbon dioxide readings where oxygen is below 0.1"
+    expected_query_contains: ["o2", "co2"]
+    expected_columns: ["time", "o2", "co2"]
+    expected_query: "df[df['o2'] < 0.1][['time', 'co2']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "co2"
+    category: "filtering"

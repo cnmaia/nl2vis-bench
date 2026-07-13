@@ -1,0 +1,91 @@
+aggregated:
+  axes_accuracy:
+    ci_95:
+    - 0.4792
+    - 0.5528
+    mean: 0.516
+    runs:
+    - 0.56
+    - 0.52
+    - 0.48
+    - 0.5
+    - 0.52
+    std: 0.0297
+  execution_success_rate:
+    ci_95:
+    - 0.9624
+    - 0.9976
+    mean: 0.98
+    runs:
+    - 1.0
+    - 0.98
+    - 0.96
+    - 0.98
+    - 0.98
+    std: 0.0141
+  ground_truth_match_rate:
+    ci_95:
+    - 0.2396
+    - 0.3364
+    mean: 0.288
+    runs:
+    - 0.34
+    - 0.26
+    - 0.24
+    - 0.3
+    - 0.3
+    std: 0.039
+  viz_accuracy:
+    ci_95:
+    - 0.4116
+    - 0.4764
+    mean: 0.444
+    runs:
+    - 0.46
+    - 0.48
+    - 0.42
+    - 0.42
+    - 0.44
+    std: 0.0261
+  viz_type_accuracy:
+    ci_95:
+    - 0.6752
+    - 0.7568
+    mean: 0.716
+    runs:
+    - 0.76
+    - 0.74
+    - 0.7
+    - 0.7
+    - 0.68
+    std: 0.0329
+individual_runs:
+- axes_accuracy: 0.56
+  execution_success_rate: 1.0
+  ground_truth_match_rate: 0.34
+  viz_accuracy: 0.46
+  viz_type_accuracy: 0.76
+- axes_accuracy: 0.52
+  execution_success_rate: 0.98
+  ground_truth_match_rate: 0.26
+  viz_accuracy: 0.48
+  viz_type_accuracy: 0.74
+- axes_accuracy: 0.48
+  execution_success_rate: 0.96
+  ground_truth_match_rate: 0.24
+  viz_accuracy: 0.42
+  viz_type_accuracy: 0.7
+- axes_accuracy: 0.5
+  execution_success_rate: 0.98
+  ground_truth_match_rate: 0.3
+  viz_accuracy: 0.42
+  viz_type_accuracy: 0.7
+- axes_accuracy: 0.52
+  execution_success_rate: 0.98
+  ground_truth_match_rate: 0.3
+  viz_accuracy: 0.44
+  viz_type_accuracy: 0.68
+metadata:
+  enrichment: true
+  model: gemini-2.5-flash
+  runs: 5

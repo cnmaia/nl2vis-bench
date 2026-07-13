@@ -1,0 +1,13 @@
+# Semantic Equivalence Configuration for Campinas Aerosol (merged)
+# Defined BEFORE experiments for methodological rigor.
+
+definition: |
+  Columns are semantically equivalent when a natural-language term could
+  validly resolve to either, for the purpose of data discovery/triage.
+
+equivalent_pairs:
+  - columns: [conc, total_conc_smps]
+    reason: "Both are aerosol particle number concentrations; 'conc' is the CPC total count, 'total_conc_smps' the SMPS integrated count over its size range. For a discovery query like 'particle number concentration over time', either is a valid answer."
+
+# - scat450/scat525/scat635 are distinct wavelengths (NOT equivalent).
+# - BC637 (black carbon mass) vs Abs637 (absorption coefficient) are related but distinct.

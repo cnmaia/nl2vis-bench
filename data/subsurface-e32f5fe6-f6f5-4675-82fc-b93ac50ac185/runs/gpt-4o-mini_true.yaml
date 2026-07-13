@@ -1,0 +1,91 @@
+aggregated:
+  axes_accuracy:
+    ci_95:
+    - 0.28
+    - 0.28
+    mean: 0.28
+    runs:
+    - 0.28
+    - 0.28
+    - 0.28
+    - 0.28
+    - 0.28
+    std: 0.0
+  execution_success_rate:
+    ci_95:
+    - 0.9184
+    - 0.9456
+    mean: 0.932
+    runs:
+    - 0.94
+    - 0.94
+    - 0.92
+    - 0.92
+    - 0.94
+    std: 0.011
+  ground_truth_match_rate:
+    ci_95:
+    - 0.6049
+    - 0.6271
+    mean: 0.616
+    runs:
+    - 0.62
+    - 0.62
+    - 0.62
+    - 0.6
+    - 0.62
+    std: 0.0089
+  viz_accuracy:
+    ci_95:
+    - 0.26
+    - 0.26
+    mean: 0.26
+    runs:
+    - 0.26
+    - 0.26
+    - 0.26
+    - 0.26
+    - 0.26
+    std: 0.0
+  viz_type_accuracy:
+    ci_95:
+    - 0.5329
+    - 0.5551
+    mean: 0.544
+    runs:
+    - 0.56
+    - 0.54
+    - 0.54
+    - 0.54
+    - 0.54
+    std: 0.0089
+individual_runs:
+- axes_accuracy: 0.28
+  execution_success_rate: 0.94
+  ground_truth_match_rate: 0.62
+  viz_accuracy: 0.26
+  viz_type_accuracy: 0.56
+- axes_accuracy: 0.28
+  execution_success_rate: 0.94
+  ground_truth_match_rate: 0.62
+  viz_accuracy: 0.26
+  viz_type_accuracy: 0.54
+- axes_accuracy: 0.28
+  execution_success_rate: 0.92
+  ground_truth_match_rate: 0.62
+  viz_accuracy: 0.26
+  viz_type_accuracy: 0.54
+- axes_accuracy: 0.28
+  execution_success_rate: 0.92
+  ground_truth_match_rate: 0.6
+  viz_accuracy: 0.26
+  viz_type_accuracy: 0.54
+- axes_accuracy: 0.28
+  execution_success_rate: 0.94
+  ground_truth_match_rate: 0.62
+  viz_accuracy: 0.26
+  viz_type_accuracy: 0.54
+metadata:
+  enrichment: true
+  model: gpt-4o-mini
+  runs: 5

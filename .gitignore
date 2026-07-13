@@ -1,0 +1,19 @@
+# secrets — never commit
+*.env
+.env
+local.env
+*.key
+# python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+# os
+.DS_Store
+# large raw data (benchmark ships samples + metadata only)
+*.nc
+*.xlsx

@@ -1,0 +1,13 @@
+column_name,dtype,description,min_value,max_value,mean_value,null_count,sample_values,llm_provider
+time,object,"Timestamp indicating the date and time of the measurements, formatted as YYYY-MM-DD HH:MM:SS.",,,,0,2017-07-01 00:00:00; 2017-07-01 00:30:00; 2017-07-01 01:00:00,openai/gpt-4o-mini
+conc,object,"Concentration of particulate matter, measured in µg/m³, with values ranging from NaN to 9061.243.",,,,0, NaN;  5824.995;  9061.243,openai/gpt-4o-mini
+BC637,object,"Black carbon concentration at a wavelength of 637 nm, measured in µg/m³, with values ranging from NaN to 0.804.",,,,0, NaN;  0.804;  0.793,openai/gpt-4o-mini
+Abs637,object,"Absorbance at a wavelength of 637 nm, with values ranging from NaN to 5.308 (unit not specified).",,,,0, NaN;  5.308;  5.237,openai/gpt-4o-mini
+scat450,object,"Scattering coefficient at a wavelength of 450 nm, measured in Mm⁻¹, with values ranging from 110.712 to 150.079.",,,,0, 150.079;  120.174;  110.712,openai/gpt-4o-mini
+scat525,object,"Scattering coefficient at a wavelength of 525 nm, measured in Mm⁻¹, with values ranging from 86.576 to 117.731.",,,,0, 117.731;  94.895;  86.576,openai/gpt-4o-mini
+scat635,object,"Scattering coefficient at a wavelength of 635 nm, measured in Mm⁻¹, with values ranging from 85.410 to 117.620.",,,,0, 117.620;  96.586;  85.410,openai/gpt-4o-mini
+Angstrom,object,"Angstrom exponent, a dimensionless quantity indicating the wavelength dependence of scattering, with values ranging from 0.621 to 0.727.",,,,0, 0.681;  0.621;  0.727,openai/gpt-4o-mini
+SSA637,object,"Single scattering albedo at a wavelength of 637 nm, a dimensionless ratio, with values ranging from 0.706 to 0.816.",,,,0, 0.816;  0.808;  0.706,openai/gpt-4o-mini
+total_conc_smps,object,"Total concentration of sampled particulate matter, measured in µg/m³, with values ranging from 18911.065 to 27177.986.",,,,0, 27177.986;  20539.435;  18911.065,openai/gpt-4o-mini
+total_volume,object,"This column represents the total volume of a measured entity in unspecified units, with sample values around 22.217, 17.887, and 17.829.",,,,0, 22.217;  17.887;  17.829,openai/gpt-4o-mini
+mean_diameter,object,"This column indicates the mean diameter of a measured object in unspecified units, with sample values approximately 61.313, 61.172, and 63.268.",,,,0, 61.313;  61.172;  63.268,openai/gpt-4o-mini

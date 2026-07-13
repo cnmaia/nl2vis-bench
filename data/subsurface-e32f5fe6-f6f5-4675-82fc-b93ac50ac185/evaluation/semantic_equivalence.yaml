@@ -1,0 +1,12 @@
+# Semantic Equivalence Configuration for PMG Subsurface Gas
+# Defined BEFORE experiments for methodological rigor.
+
+definition: |
+  Columns are semantically equivalent when a natural-language term could
+  validly resolve to either, for the purpose of data discovery/triage.
+
+equivalent_pairs: []
+
+# - ch4 (methane spot reading) vs ch4_peak (methane peak): related but distinct
+#   measures; currently treated as NOT equivalent. If a discovery query like
+#   "show methane" should accept either, add them here.

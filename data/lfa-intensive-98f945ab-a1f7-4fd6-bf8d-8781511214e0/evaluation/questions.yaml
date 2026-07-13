@@ -1,0 +1,487 @@
+# Evaluation Dataset for scientific data catalogs-Vis -- Campinas Aerosol (merged instruments)
+# Dataset: LFA Intensive Field Experiments -- Campinas aerosol properties 2017-2018 (L3)
+# Source: an anonymized data repository -- DOI: [withheld for double-blind review]
+# Data file: campinas_merged_sample.csv  (produced by merge_instruments.py)
+# Domain: atmospheric aerosols / optical & physical properties
+#
+#   time            UTC timestamp (30 min)
+#   conc            aerosol number concentration            [CPC]
+#   BC637           black carbon concentration              [MAAP]
+#   Abs637          absorption coefficient at 637 nm        [MAAP]
+#   scat450/525/635 aerosol scattering coefficients (blue/green/red)  [Nephelometer]
+#   Angstrom        Angstrom exponent                       [Nephelometer]
+#   SSA637          single scattering albedo at 637 nm      [Nephelometer]
+#   total_conc_smps total particle number concentration     [SMPS]
+#   total_volume    total particle volume                   [SMPS]
+#   mean_diameter   mean particle diameter                  [SMPS]
+#
+#   black carbon->BC637, absorption coefficient->Abs637, blue/green/red scattering->
+#   scat450/525/635, Angstrom exponent->Angstrom, single scattering albedo->SSA637,
+#   particle number concentration->conc (ambiguous with total_conc_smps; see equivalence).
+
+version: "1.0"
+description: "50 evaluation questions for the merged Campinas aerosol dataset (L3, 30min)"
+dataset: "CAMPINAS-AEROSOL-LFA-2017-2018-L3"
+
+questions:
+  # ===== COMPUTED (10) =====
+  - id: comp_001
+    question: "Show the distribution of the ratio of blue to red scattering"
+    expected_query_contains: ["scat450", "scat635"]
+    expected_columns: ["scat450", "scat635"]
+    expected_query: "df.assign(blue_red_ratio=df['scat450'] / df['scat635'])[['blue_red_ratio']]"
+    expected_viz: "histogram"
+    expected_x: "blue_red_ratio"
+    expected_y: null
+    category: "computed"
+  - id: comp_002
+    question: "Plot the cumulative black carbon concentration over time"
+    expected_query_contains: ["cumsum", "BC637"]
+    expected_columns: ["time", "BC637"]
+    expected_query: "df[['time']].assign(cum_bc=df['BC637'].cumsum())"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "cum_bc"
+    category: "computed"
+  - id: comp_003
+    question: "Show the difference between blue and red scattering over time"
+    expected_query_contains: ["scat450", "scat635"]
+    expected_columns: ["time", "scat450", "scat635"]
+    expected_query: "df[['time']].assign(scat_diff=df['scat450'] - df['scat635'])"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "scat_diff"
+    category: "computed"
+  - id: comp_004
+    question: "Show the ratio of light absorption to red scattering over time"
+    expected_query_contains: ["Abs637", "scat635"]
+    expected_columns: ["time", "Abs637", "scat635"]
+    expected_query: "df[['time']].assign(abs_scat_ratio=df['Abs637'] / df['scat635'])"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "abs_scat_ratio"
+    category: "computed"
+  - id: comp_005
+    question: "Show the distribution of the black-carbon-to-scattering ratio"
+    expected_query_contains: ["BC637", "scat635"]
+    expected_columns: ["BC637", "scat635"]
+    expected_query: "df.assign(bc_scat_ratio=df['BC637'] / df['scat635'])[['bc_scat_ratio']]"
+    expected_viz: "histogram"
+    expected_x: "bc_scat_ratio"
+    expected_y: null
+    category: "computed"
+  - id: comp_006
+    question: "Plot the cumulative total particle volume over time"
+    expected_query_contains: ["cumsum", "total_volume"]
+    expected_columns: ["time", "total_volume"]
+    expected_query: "df[['time']].assign(cum_volume=df['total_volume'].cumsum())"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "cum_volume"
+    category: "computed"
+  - id: comp_007
+    question: "Show the distribution of average particle volume per particle"
+    expected_query_contains: ["total_volume", "total_conc_smps"]
+    expected_columns: ["total_volume", "total_conc_smps"]
+    expected_query: "df.assign(vol_per_particle=df['total_volume'] / df['total_conc_smps'])[['vol_per_particle']]"
+    expected_viz: "histogram"
+    expected_x: "vol_per_particle"
+    expected_y: null
+    category: "computed"
+  - id: comp_008
+    question: "Show the difference between green and red scattering over time"
+    expected_query_contains: ["scat525", "scat635"]
+    expected_columns: ["time", "scat525", "scat635"]
+    expected_query: "df[['time']].assign(green_red_diff=df['scat525'] - df['scat635'])"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "green_red_diff"
+    category: "computed"
+  - id: comp_009
+    question: "Show the distribution of absorption relative to black carbon"
+    expected_query_contains: ["Abs637", "BC637"]
+    expected_columns: ["Abs637", "BC637"]
+    expected_query: "df.assign(abs_bc_ratio=df['Abs637'] / df['BC637'])[['abs_bc_ratio']]"
+    expected_viz: "histogram"
+    expected_x: "abs_bc_ratio"
+    expected_y: null
+    category: "computed"
+  - id: comp_010
+    question: "Plot blue scattering normalized by particle number over time"
+    expected_query_contains: ["scat450", "conc"]
+    expected_columns: ["time", "scat450", "conc"]
+    expected_query: "df[['time']].assign(scat_per_particle=df['scat450'] / df['conc'])"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "scat_per_particle"
+    category: "computed"
+
+  # ===== TEMPORAL (10) =====
+  - id: temp_001
+    question: "Show black carbon concentration over time"
+    expected_query_contains: ["time", "BC637"]
+    expected_columns: ["time", "BC637"]
+    expected_query: "df[['time', 'BC637']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "BC637"
+    category: "temporal"
+  - id: temp_002
+    question: "How does the aerosol number concentration change over time?"
+    expected_query_contains: ["time", "conc"]
+    expected_columns: ["time", "conc"]
+    expected_query: "df[['time', 'conc']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "conc"
+    category: "temporal"
+  - id: temp_003
+    question: "Plot the light absorption coefficient over the campaign"
+    expected_query_contains: ["time", "Abs637"]
+    expected_columns: ["time", "Abs637"]
+    expected_query: "df[['time', 'Abs637']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "Abs637"
+    category: "temporal"
+  - id: temp_004
+    question: "Show the single scattering albedo over time"
+    expected_query_contains: ["time", "SSA637"]
+    expected_columns: ["time", "SSA637"]
+    expected_query: "df[['time', 'SSA637']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "SSA637"
+    category: "temporal"
+  - id: temp_005
+    question: "Display the blue light scattering coefficient time series"
+    expected_query_contains: ["time", "scat450"]
+    expected_columns: ["time", "scat450"]
+    expected_query: "df[['time', 'scat450']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "scat450"
+    category: "temporal"
+  - id: temp_006
+    question: "Show the Angstrom exponent over time"
+    expected_query_contains: ["time", "Angstrom"]
+    expected_columns: ["time", "Angstrom"]
+    expected_query: "df[['time', 'Angstrom']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "Angstrom"
+    category: "temporal"
+  - id: temp_007
+    question: "Plot the mean particle diameter over time"
+    expected_query_contains: ["time", "mean_diameter"]
+    expected_columns: ["time", "mean_diameter"]
+    expected_query: "df[['time', 'mean_diameter']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "mean_diameter"
+    category: "temporal"
+  - id: temp_008
+    question: "Show how total particle volume evolved over the campaign"
+    expected_query_contains: ["time", "total_volume"]
+    expected_columns: ["time", "total_volume"]
+    expected_query: "df[['time', 'total_volume']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "total_volume"
+    category: "temporal"
+  - id: temp_009
+    question: "Display the green light scattering coefficient over time"
+    expected_query_contains: ["time", "scat525"]
+    expected_columns: ["time", "scat525"]
+    expected_query: "df[['time', 'scat525']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "scat525"
+    category: "temporal"
+  - id: temp_010
+    question: "Show the red light scattering over time"
+    expected_query_contains: ["time", "scat635"]
+    expected_columns: ["time", "scat635"]
+    expected_query: "df[['time', 'scat635']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "scat635"
+    category: "temporal"
+
+  # ===== DISTRIBUTION (10) =====
+  - id: dist_001
+    question: "Show the distribution of black carbon concentration"
+    expected_query_contains: ["BC637"]
+    expected_columns: ["BC637"]
+    expected_query: "df[['BC637']]"
+    expected_viz: "histogram"
+    expected_x: "BC637"
+    expected_y: null
+    category: "distribution"
+  - id: dist_002
+    question: "What is the distribution of the single scattering albedo?"
+    expected_query_contains: ["SSA637"]
+    expected_columns: ["SSA637"]
+    expected_query: "df[['SSA637']]"
+    expected_viz: "histogram"
+    expected_x: "SSA637"
+    expected_y: null
+    category: "distribution"
+  - id: dist_003
+    question: "Show the frequency distribution of aerosol number concentration"
+    expected_query_contains: ["conc"]
+    expected_columns: ["conc"]
+    expected_query: "df[['conc']]"
+    expected_viz: "histogram"
+    expected_x: "conc"
+    expected_y: null
+    category: "distribution"
+  - id: dist_004
+    question: "Create a histogram of the light absorption coefficient"
+    expected_query_contains: ["Abs637"]
+    expected_columns: ["Abs637"]
+    expected_query: "df[['Abs637']]"
+    expected_viz: "histogram"
+    expected_x: "Abs637"
+    expected_y: null
+    category: "distribution"
+  - id: dist_005
+    question: "Show how blue scattering is distributed"
+    expected_query_contains: ["scat450"]
+    expected_columns: ["scat450"]
+    expected_query: "df[['scat450']]"
+    expected_viz: "histogram"
+    expected_x: "scat450"
+    expected_y: null
+    category: "distribution"
+  - id: dist_006
+    question: "What is the distribution of the Angstrom exponent?"
+    expected_query_contains: ["Angstrom"]
+    expected_columns: ["Angstrom"]
+    expected_query: "df[['Angstrom']]"
+    expected_viz: "histogram"
+    expected_x: "Angstrom"
+    expected_y: null
+    category: "distribution"
+  - id: dist_007
+    question: "Show the distribution of mean particle diameter"
+    expected_query_contains: ["mean_diameter"]
+    expected_columns: ["mean_diameter"]
+    expected_query: "df[['mean_diameter']]"
+    expected_viz: "histogram"
+    expected_x: "mean_diameter"
+    expected_y: null
+    category: "distribution"
+  - id: dist_008
+    question: "Create a histogram of total particle volume"
+    expected_query_contains: ["total_volume"]
+    expected_columns: ["total_volume"]
+    expected_query: "df[['total_volume']]"
+    expected_viz: "histogram"
+    expected_x: "total_volume"
+    expected_y: null
+    category: "distribution"
+  - id: dist_009
+    question: "Show the frequency distribution of green scattering"
+    expected_query_contains: ["scat525"]
+    expected_columns: ["scat525"]
+    expected_query: "df[['scat525']]"
+    expected_viz: "histogram"
+    expected_x: "scat525"
+    expected_y: null
+    category: "distribution"
+  - id: dist_010
+    question: "What is the distribution of total particle number concentration from the SMPS?"
+    expected_query_contains: ["total_conc_smps"]
+    expected_columns: ["total_conc_smps"]
+    expected_query: "df[['total_conc_smps']]"
+    expected_viz: "histogram"
+    expected_x: "total_conc_smps"
+    expected_y: null
+    category: "distribution"
+
+  # ===== CORRELATION (10) =====
+  - id: corr_001
+    question: "Is there a relationship between black carbon and light absorption?"
+    expected_query_contains: ["BC637", "Abs637"]
+    expected_columns: ["BC637", "Abs637"]
+    expected_query: "df[['BC637', 'Abs637']]"
+    expected_viz: "scatter"
+    expected_x: "BC637"
+    expected_y: "Abs637"
+    category: "correlation"
+  - id: corr_002
+    question: "Show the relationship between blue and red scattering"
+    expected_query_contains: ["scat450", "scat635"]
+    expected_columns: ["scat450", "scat635"]
+    expected_query: "df[['scat450', 'scat635']]"
+    expected_viz: "scatter"
+    expected_x: "scat450"
+    expected_y: "scat635"
+    category: "correlation"
+  - id: corr_003
+    question: "Plot single scattering albedo against black carbon"
+    expected_query_contains: ["SSA637", "BC637"]
+    expected_columns: ["SSA637", "BC637"]
+    expected_query: "df[['SSA637', 'BC637']]"
+    expected_viz: "scatter"
+    expected_x: "SSA637"
+    expected_y: "BC637"
+    category: "correlation"
+  - id: corr_004
+    question: "Is there a correlation between particle number concentration and total volume?"
+    expected_query_contains: ["conc", "total_volume"]
+    expected_columns: ["conc", "total_volume"]
+    expected_query: "df[['conc', 'total_volume']]"
+    expected_viz: "scatter"
+    expected_x: "conc"
+    expected_y: "total_volume"
+    category: "correlation"
+  - id: corr_005
+    question: "Show the relationship between the Angstrom exponent and mean diameter"
+    expected_query_contains: ["Angstrom", "mean_diameter"]
+    expected_columns: ["Angstrom", "mean_diameter"]
+    expected_query: "df[['Angstrom', 'mean_diameter']]"
+    expected_viz: "scatter"
+    expected_x: "Angstrom"
+    expected_y: "mean_diameter"
+    category: "correlation"
+  - id: corr_006
+    question: "Plot light absorption against blue scattering"
+    expected_query_contains: ["Abs637", "scat450"]
+    expected_columns: ["Abs637", "scat450"]
+    expected_query: "df[['Abs637', 'scat450']]"
+    expected_viz: "scatter"
+    expected_x: "Abs637"
+    expected_y: "scat450"
+    category: "correlation"
+  - id: corr_007
+    question: "Show the relationship between green and red scattering"
+    expected_query_contains: ["scat525", "scat635"]
+    expected_columns: ["scat525", "scat635"]
+    expected_query: "df[['scat525', 'scat635']]"
+    expected_viz: "scatter"
+    expected_x: "scat525"
+    expected_y: "scat635"
+    category: "correlation"
+  - id: corr_008
+    question: "Is there a relationship between black carbon and single scattering albedo?"
+    expected_query_contains: ["BC637", "SSA637"]
+    expected_columns: ["BC637", "SSA637"]
+    expected_query: "df[['BC637', 'SSA637']]"
+    expected_viz: "scatter"
+    expected_x: "BC637"
+    expected_y: "SSA637"
+    category: "correlation"
+  - id: corr_009
+    question: "Plot mean particle diameter against total particle number"
+    expected_query_contains: ["mean_diameter", "total_conc_smps"]
+    expected_columns: ["mean_diameter", "total_conc_smps"]
+    expected_query: "df[['mean_diameter', 'total_conc_smps']]"
+    expected_viz: "scatter"
+    expected_x: "mean_diameter"
+    expected_y: "total_conc_smps"
+    category: "correlation"
+  - id: corr_010
+    question: "Show the relationship between blue scattering and the Angstrom exponent"
+    expected_query_contains: ["scat450", "Angstrom"]
+    expected_columns: ["scat450", "Angstrom"]
+    expected_query: "df[['scat450', 'Angstrom']]"
+    expected_viz: "scatter"
+    expected_x: "scat450"
+    expected_y: "Angstrom"
+    category: "correlation"
+
+  # ===== GROUPING (5) =====
+  - id: grp_001
+    question: "What is the average black carbon concentration per month?"
+    expected_query_contains: ["groupby", "BC637"]
+    expected_columns: ["time", "BC637"]
+    expected_query: "df.groupby(df['time'].dt.month)['BC637'].mean().reset_index()"
+    expected_viz: "histogram"
+    expected_x: "time"
+    expected_y: "BC637"
+    category: "grouping"
+  - id: grp_002
+    question: "Show the mean single scattering albedo by month of the year"
+    expected_query_contains: ["groupby", "SSA637"]
+    expected_columns: ["time", "SSA637"]
+    expected_query: "df.groupby(df['time'].dt.month)['SSA637'].mean().reset_index()"
+    expected_viz: "histogram"
+    expected_x: "time"
+    expected_y: "SSA637"
+    category: "grouping"
+  - id: grp_003
+    question: "Compute the average aerosol number concentration per hour of day"
+    expected_query_contains: ["groupby", "conc"]
+    expected_columns: ["time", "conc"]
+    expected_query: "df.groupby(df['time'].dt.hour)['conc'].mean().reset_index()"
+    expected_viz: "histogram"
+    expected_x: "time"
+    expected_y: "conc"
+    category: "grouping"
+  - id: grp_004
+    question: "What is the maximum light absorption coefficient per month?"
+    expected_query_contains: ["groupby", "Abs637"]
+    expected_columns: ["time", "Abs637"]
+    expected_query: "df.groupby(df['time'].dt.month)['Abs637'].max().reset_index()"
+    expected_viz: "histogram"
+    expected_x: "time"
+    expected_y: "Abs637"
+    category: "grouping"
+  - id: grp_005
+    question: "Show the average blue scattering by month"
+    expected_query_contains: ["groupby", "scat450"]
+    expected_columns: ["time", "scat450"]
+    expected_query: "df.groupby(df['time'].dt.month)['scat450'].mean().reset_index()"
+    expected_viz: "histogram"
+    expected_x: "time"
+    expected_y: "scat450"
+    category: "grouping"
+
+  # ===== FILTERING (5) =====
+  - id: flt_001
+    question: "Show black carbon readings where the single scattering albedo is below 0.8"
+    expected_query_contains: ["SSA637", "BC637"]
+    expected_columns: ["time", "SSA637", "BC637"]
+    expected_query: "df[df['SSA637'] < 0.8][['time', 'BC637']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "BC637"
+    category: "filtering"
+  - id: flt_002
+    question: "Show absorption values where black carbon exceeds 5"
+    expected_query_contains: ["BC637", "Abs637"]
+    expected_columns: ["time", "BC637", "Abs637"]
+    expected_query: "df[df['BC637'] > 5][['time', 'Abs637']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "Abs637"
+    category: "filtering"
+  - id: flt_003
+    question: "Show the aerosol number concentration for the year 2018"
+    expected_query_contains: ["2018", "conc"]
+    expected_columns: ["time", "conc"]
+    expected_query: "df[df['time'].dt.year == 2018][['time', 'conc']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "conc"
+    category: "filtering"
+  - id: flt_004
+    question: "Get observations where the Angstrom exponent is above 1.5"
+    expected_query_contains: ["Angstrom"]
+    expected_columns: ["time", "Angstrom"]
+    expected_query: "df[df['Angstrom'] > 1.5][['time', 'Angstrom']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "Angstrom"
+    category: "filtering"
+  - id: flt_005
+    question: "Show blue scattering where particle number concentration is above 10000"
+    expected_query_contains: ["conc", "scat450"]
+    expected_columns: ["time", "conc", "scat450"]
+    expected_query: "df[df['conc'] > 10000][['time', 'scat450']]"
+    expected_viz: "line"
+    expected_x: "time"
+    expected_y: "scat450"
+    category: "filtering"
