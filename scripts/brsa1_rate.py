@@ -24,6 +24,10 @@ PARTIAL = {
     "adj_sfc_sw_diff_naer_daily",                   # no-aerosol -> vague "non-aerosol scattering"
     "e_median", "e_minimum", "e_variance",          # evaporation named but hedged with latent heat / energy-water flux
     "ro_variance",                                  # runoff hedged with "surface roughness"
+    "NEE_CUT_REF", "NEE_VUT_REF",                   # flux named correctly, but CUT/VUT invented as
+                                                    # "carbon-uptake-"/"VPD-uncertainty-threshold" (both are
+                                                    # constant/variable USTAR thresholds) and units given as
+                                                    # umol m-2 s-1 where the deposit is daily gC m-2 d-1
 }
 WRONG = {
     "e_mean",       # "mean surface emissivity" -- it is evaporation
